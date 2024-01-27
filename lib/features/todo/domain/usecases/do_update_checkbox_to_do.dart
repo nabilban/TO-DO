@@ -4,14 +4,15 @@ import 'package:flutter_project_2/cores/abstracts/usecase.dart';
 import 'package:flutter_project_2/features/todo/domain/entities/to_do_info.dart';
 import 'package:flutter_project_2/features/todo/domain/repositories/to_do_repository.dart';
 
-class DoCreateToDo extends UseCase<ToDoInfo, DoCreateToDoParams> {
-  DoCreateToDo({required this.repository});
-
+class DoUpdateCheckboxToDo
+    extends UseCase<ToDoInfo, DoUpdateCheckboxToDoParams> {
   final TodoRepository repository;
 
+  DoUpdateCheckboxToDo({required this.repository});
   @override
-  Future<Either<Failure, ToDoInfo>> call(params) async {
-    final result = await repository.createToDo((params.data));
+  Future<Either<Failure, ToDoInfo>> call(
+      DoUpdateCheckboxToDoParams params) async {
+    final result = await repository.updateCheckboxToDo(params.id);
 
     return result.fold(
       (l) => Left(l),
@@ -20,8 +21,8 @@ class DoCreateToDo extends UseCase<ToDoInfo, DoCreateToDoParams> {
   }
 }
 
-class DoCreateToDoParams {
-  DoCreateToDoParams({required this.data});
+class DoUpdateCheckboxToDoParams {
+  DoUpdateCheckboxToDoParams({required this.id});
 
-  final ToDoInfo data;
+  final String id;
 }

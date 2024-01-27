@@ -15,10 +15,8 @@ class DoGetAllToDo extends UseCaseNoParams<List<ToDoInfo>> {
 
     return result.fold((failure) {
       return Left(failure);
-    }, (listTodoModel) {
-      return Right(listTodoModel
-          .map((todoModel) => ToDoInfo.fromModel(todoModel))
-          .toList());
+    }, (listToDoInfo) {
+      return Right(listToDoInfo);
     });
   }
 }

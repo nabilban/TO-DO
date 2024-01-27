@@ -3,6 +3,7 @@ import 'package:flutter_project_2/features/todo/presentation/providers/to_do_pro
 import 'package:flutter_project_2/features/todo/presentation/widgets/to_do_dialog.dart';
 import 'package:flutter_project_2/features/todo/presentation/widgets/to_do_item.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:loader_overlay/loader_overlay.dart';
 
 class TodoPage extends ConsumerWidget {
   const TodoPage({super.key});
@@ -18,29 +19,39 @@ class TodoPage extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final state = ref.watch(toDoNotifierProvider);
 
-    return Scaffold(
-      backgroundColor: const Color.fromARGB(255, 148, 148, 148),
-      appBar: AppBar(
-        title: const Text('To Do List'),
-        titleTextStyle:
-            const TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
-        centerTitle: true,
-        backgroundColor: const Color.fromARGB(246, 226, 159, 71),
-      ),
-      body: ListView.builder(
-        itemCount: state.toDoList.length,
-        itemBuilder: (context, index) {
-          return ToDoItem(
-              taskName: state.toDoList[index].text,
-              taskCompleted: state.toDoList[index].isCompleted,
-              onChanged: (value) {},
-              deleteTask: () {});
-        },
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () => createNewTask(context),
-        backgroundColor: const Color.fromARGB(255, 255, 255, 255),
-        child: const Icon(Icons.add),
+    return LoaderOverlay(
+      child: Scaffold(
+        backgroundColor: const Color.fromARGB(255, 148, 148, 148),
+        appBar: AppBar(
+          title: const Text('To Do List'),
+          titleTextStyle:
+              const TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+          centerTitle: true,
+          backgroundColor: const Color.fromARGB(246, 226, 159, 71),
+        ),
+        body: ListView.builder(
+          itemCount: state.toDoList.length,
+          itemBuilder: (context, index) {
+            return ToDoItem(
+                taskName: state.toDoList[index].text,
+                taskCompleted: state.toDoList[index].isCompleted,
+                onChanged: (value) {
+                  ref
+                      .read(toDoNotifierProvider.notifier)
+                      .updateCheckboxToDo(state.toDoList[index].id, context);
+                },
+                deleteTask: () {
+                  ref
+                      .read(toDoNotifierProvider.notifier)
+                      .deleteToDo(state.toDoList[index].id, context);
+                });
+          },
+        ),
+        floatingActionButton: FloatingActionButton(
+          onPressed: () => createNewTask(context),
+          backgroundColor: const Color.fromARGB(255, 255, 255, 255),
+          child: const Icon(Icons.add),
+        ),
       ),
     );
   }

@@ -47,7 +47,7 @@ class _ToDoDialog extends ConsumerState<ToDoDialog> {
                 if (!state.isLoading) {
                   final task = ToDoInfo(
                       id: '0', isCompleted: false, text: taskController.text);
-                  notifier.createTodo(task);
+                  notifier.createTodo(task, context);
                 }
               },
               child: const Text('Save Task'),

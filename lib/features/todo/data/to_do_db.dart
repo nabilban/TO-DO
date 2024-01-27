@@ -1,17 +1,19 @@
-import 'package:uuid/v4.dart';
+import 'package:uuid/uuid.dart';
 
 class ToDoDb {
   const ToDoDb();
 
+  static const uuid = Uuid();
+
   static List<Map<String, dynamic>> db = [];
 
-  static const _waiting = Duration(seconds: 2);
+  static const _waiting = Duration(seconds: 0);
 
   Future<Map<String, dynamic>> create(Map<String, dynamic> input) {
     return Future.delayed(_waiting, () {
       db.add({
-        "id": const UuidV4(),
         ...input,
+        "id": uuid.v4(),
       });
       return input;
     });

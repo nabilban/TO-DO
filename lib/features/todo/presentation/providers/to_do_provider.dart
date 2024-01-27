@@ -3,7 +3,9 @@ import 'package:flutter_project_2/features/todo/data/repositories/to_do_reposito
 import 'package:flutter_project_2/features/todo/data/to_do_db.dart';
 import 'package:flutter_project_2/features/todo/domain/repositories/to_do_repository.dart';
 import 'package:flutter_project_2/features/todo/domain/usecases/do_create_to_do.dart';
+import 'package:flutter_project_2/features/todo/domain/usecases/do_delete_to_do.dart';
 import 'package:flutter_project_2/features/todo/domain/usecases/do_get_all_to_do.dart';
+import 'package:flutter_project_2/features/todo/domain/usecases/do_update_checkbox_to_do.dart';
 import 'package:flutter_project_2/features/todo/presentation/providers/state/to_do_notifier_state.dart';
 import 'package:flutter_project_2/features/todo/presentation/providers/to_do_notifier.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -30,10 +32,23 @@ final doGetAllToDoProvider = Provider<DoGetAllToDo>((ref) {
   return DoGetAllToDo(repository: repository);
 });
 
+final doDeleteToDoProvider = Provider<DoDeleteToDo>((ref) {
+  final TodoRepository repository = ref.read(toDoRepositoryProvider);
+  return DoDeleteToDo(repository: repository);
+});
+
+final doUpdateCheckboxProvider = Provider<DoUpdateCheckboxToDo>((ref) {
+  final TodoRepository repository = ref.read(toDoRepositoryProvider);
+  return DoUpdateCheckboxToDo(repository: repository);
+});
+
 final toDoNotifierProvider =
     StateNotifierProvider<ToDoNotifier, ToDoNotifierState>((ref) {
   final doCreateToDo = ref.read(doCreateToDoProvider);
   final doGetAllTodo = ref.read(doGetAllToDoProvider);
+  final doDeleteToDo = ref.read(doDeleteToDoProvider);
+  final doUpdateCheckboxToDo = ref.read(doUpdateCheckboxProvider);
 
-  return ToDoNotifier(doCreateToDo, doGetAllTodo);
+  return ToDoNotifier(
+      doCreateToDo, doGetAllTodo, doDeleteToDo, doUpdateCheckboxToDo);
 });
