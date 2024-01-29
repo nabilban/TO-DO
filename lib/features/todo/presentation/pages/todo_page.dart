@@ -5,9 +5,16 @@ import 'package:flutter_project_2/features/todo/presentation/widgets/to_do_item.
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:loader_overlay/loader_overlay.dart';
 
-class TodoPage extends ConsumerWidget {
+class TodoPage extends ConsumerStatefulWidget {
   const TodoPage({super.key});
 
+  @override
+  ConsumerState<ConsumerStatefulWidget> createState() {
+    return _ConsumerStatefulWidget();
+  }
+}
+
+class _ConsumerStatefulWidget extends ConsumerState {
   createNewTask(context) {
     return showDialog(
       context: context,
@@ -16,7 +23,15 @@ class TodoPage extends ConsumerWidget {
   }
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  void initState() {
+    Future.delayed(const Duration(milliseconds: 500), () {
+      ref.read(toDoNotifierProvider.notifier).getAllToDo();
+    });
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
     final state = ref.watch(toDoNotifierProvider);
 
     return LoaderOverlay(
